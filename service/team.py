@@ -1,12 +1,15 @@
+from plotting.colors import colors
 from service.match import FootballMatch
 
 __author__ = 'aleksart'
 
 
 class Team:
-    def __init__(self, name):
+    def __init__(self, name, team_colors):
         self.name = name
         self.matches = []
+        self.main_color = team_colors[0]
+        self.add_color = team_colors[1]
 
     def add_match(self, football_match):
         self.matches.append(football_match)
@@ -41,7 +44,7 @@ class Team:
 
     def get_matches_result_in_date_range(self, begin, end, step):
         sorted_matches = sorted(self.matches, key=lambda x: x.datetime)
-        timedelta =( end - begin )/ step
+        timedelta = (end - begin) / step
 
         result = []
 
@@ -59,13 +62,16 @@ class Team:
             result.append([points, scored, missed])
         return result
 
+
 class League:
     def __init__(self, name):
         self.name = name
         self.teams = dict()
+        self.colors = colors[name]
 
     def add_team(self, team_name):
-        self.teams[team_name] = Team(team_name)
+        self.teams[team_name] = Team(team_name, self.colors[team_name])
+
 
     def add_match(self, football_match):
         if football_match.guest not in self.teams.keys():
